@@ -189,7 +189,9 @@
     .card-header {
       background: var(--bg-header);
       padding: 1rem;
+      padding-right: 5.25rem;
       border-bottom: 2px solid var(--border-mid);
+      position: relative;
     }
 
     .card-header h2 {
@@ -203,6 +205,53 @@
       font-size: 0.85rem;
       color: var(--text-muted);
       font-weight: 500;
+    }
+
+    .card-actions {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .star-button {
+      appearance: none;
+      border: 1px solid var(--border-mid);
+      background: var(--bg-card);
+      color: var(--accent-tan);
+      border-radius: 999px;
+      width: 38px;
+      height: 38px;
+      font-size: 1.1rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.15s, background-color 0.3s, box-shadow 0.3s;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .star-button:hover {
+      transform: translateY(-1px);
+      background: var(--bg-embed);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+    }
+
+    .star-button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .star-count {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      min-width: 2ch;
+      text-align: right;
     }
 
     .media-grid {
@@ -429,6 +478,10 @@
           <header class="card-header">
             <h2>You Are Mine</h2>
             <p class="meta">David Haas</p>
+            <div class="card-actions">
+              <button class="star-button" type="button" data-star-button aria-label="Add star" title="Add star">★</button>
+              <span class="star-count" data-star-count aria-label="Stars">0</span>
+            </div>
           </header>
 
           <div class="media-grid">
@@ -478,6 +531,10 @@ Add it here: lyrics/you-are-mine.txt
           <header class="card-header">
             <h2>Saranggola</h2>
             <p class="meta">Ben&amp;Ben</p>
+            <div class="card-actions">
+              <button class="star-button" type="button" data-star-button aria-label="Add star" title="Add star">★</button>
+              <span class="star-count" data-star-count aria-label="Stars">0</span>
+            </div>
           </header>
 
           <div class="media-grid">
@@ -519,6 +576,10 @@ Add it here: lyrics/saranggola.txt
           <header class="card-header">
             <h2>Kaibigan Ko, Paaralan Ko</h2>
             <p class="meta">Sir. Rommel Constantino &amp; Ms. Rodessa Impas (sung) • Sir. Ronnie N. Velez (composed)</p>
+            <div class="card-actions">
+              <button class="star-button" type="button" data-star-button aria-label="Add star" title="Add star">★</button>
+              <span class="star-count" data-star-count aria-label="Stars">0</span>
+            </div>
           </header>
 
           <div class="media-grid">
@@ -554,6 +615,10 @@ Add it here: lyrics/kaibigan-ko-paaralan-ko.txt
           <header class="card-header">
             <h2>BCP Hymn</h2>
             <p class="meta">Bestlink College of the Philippines</p>
+            <div class="card-actions">
+              <button class="star-button" type="button" data-star-button aria-label="Add star" title="Add star">★</button>
+              <span class="star-count" data-star-count aria-label="Stars">0</span>
+            </div>
           </header>
 
           <div class="media-grid">
@@ -589,6 +654,10 @@ Add it here: lyrics/bcp-hymn.txt
             <h2>Liwanag sa Dilim</h2>
             <p class="meta">PABLO of SB19</p>
             <p class="meta">From “Incognito” • Dance music</p>
+            <div class="card-actions">
+              <button class="star-button" type="button" data-star-button aria-label="Add star" title="Add star">★</button>
+              <span class="star-count" data-star-count aria-label="Stars">0</span>
+            </div>
           </header>
 
           <div class="media-grid">
@@ -644,7 +713,19 @@ Add it here: lyrics/liwanag-sa-dilim.txt
     </footer>
   </main>
 
-  <script>
+  <script src="firebase-config.js"></script>
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
+    import {
+      addDoc,
+      collection,
+      doc,
+      getFirestore,
+      onSnapshot,
+      runTransaction,
+      serverTimestamp,
+    } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js';
+
     // Theme Management with localStorage
     const themeToggle = document.getElementById('themeToggle');
     const htmlElement = document.documentElement;
@@ -722,6 +803,84 @@ Add it here: lyrics/liwanag-sa-dilim.txt
           });
       }
     });
+
+    // Star counter (Firestore)
+    const firebaseConfig = window.__FIREBASE_CONFIG__;
+    const starButtons = Array.from(document.querySelectorAll('[data-star-button]'));
+
+    function getOrCreateAnonId() {
+      const key = 'gradsong_anon_id';
+      let existing = localStorage.getItem(key);
+      if (existing) return existing;
+      const created =
+        (typeof crypto !== 'undefined' && crypto.randomUUID && crypto.randomUUID()) ||
+        `anon_${Date.now()}_${Math.random().toString(16).slice(2)}`;
+      localStorage.setItem(key, created);
+      return created;
+    }
+
+    function disableStars(reason) {
+      starButtons.forEach((btn) => {
+        btn.disabled = true;
+        if (reason) btn.title = reason;
+      });
+    }
+
+    if (!firebaseConfig || !firebaseConfig.projectId) {
+      disableStars('Stars disabled (missing firebase-config.js)');
+    } else {
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+      const anonId = getOrCreateAnonId();
+
+      document.querySelectorAll('.card[id]').forEach((card) => {
+        const songId = card.id;
+        const button = card.querySelector('[data-star-button]');
+        const countEl = card.querySelector('[data-star-count]');
+        if (!button || !countEl) return;
+
+        const counterRef = doc(db, 'starCounters', songId);
+
+        onSnapshot(
+          counterRef,
+          (snap) => {
+            const count = snap.exists() ? Number(snap.data().count ?? 0) : 0;
+            countEl.textContent = Number.isFinite(count) ? String(count) : '0';
+          },
+          () => {
+            countEl.textContent = '0';
+          },
+        );
+
+        button.addEventListener('click', async () => {
+          button.disabled = true;
+          try {
+            await runTransaction(db, async (tx) => {
+              const snap = await tx.get(counterRef);
+              const current = snap.exists() ? Number(snap.data().count ?? 0) : 0;
+              const next = (Number.isFinite(current) ? current : 0) + 1;
+              tx.set(
+                counterRef,
+                { count: next, updatedAt: serverTimestamp() },
+                { merge: true },
+              );
+            });
+
+            // Keep existing collections; log click in studentLogs (optional but useful)
+            await addDoc(collection(db, 'studentLogs'), {
+              type: 'star_click',
+              songId,
+              anonId,
+              createdAt: serverTimestamp(),
+            });
+          } catch (err) {
+            console.error('Star click failed', err);
+          } finally {
+            button.disabled = false;
+          }
+        });
+      });
+    }
   </script>
 </body>
 </html>

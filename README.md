@@ -1,5 +1,33 @@
 # GradSongWithLyrics
 
+## Firebase Stars (Firestore)
+
+This project uses Firestore for a per-song star counter.
+
+- New collection added: `starCounters`
+- Existing collections are not deleted: `reservations`, `socialLinks`, `studentLogs`
+- Each star click increments `starCounters/{songId}` and logs to `studentLogs`
+
+### Local setup
+
+1. Fill in `.env` (or copy `.env.example` → `.env`)
+2. Generate `firebase-config.js`:
+
+`node scripts/generate-firebase-config.mjs`
+
+### GitHub Pages setup (Secrets)
+
+Add these GitHub repo secrets (Settings → Secrets and variables → Actions):
+
+- `FIREBASE_API_KEY`
+- `FIREBASE_AUTH_DOMAIN`
+- `FIREBASE_PROJECT_ID`
+- `FIREBASE_STORAGE_BUCKET`
+- `FIREBASE_MESSAGING_SENDER_ID`
+- `FIREBASE_APP_ID`
+- `FIREBASE_MEASUREMENT_ID` (optional)
+
+
 Static page for Bestlink College of the Philippines graduation songs with embedded YouTube videos and a lyrics section.
 
 ## Run
@@ -11,4 +39,3 @@ If you use XAMPP, make sure this project is inside your `htdocs` and then visit 
 ## Add lyrics
 
 Edit/add files inside `lyrics/` (see `lyrics/README.md`).
-

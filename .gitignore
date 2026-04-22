@@ -1,0 +1,10 @@
+.DS_Store
+node_modules/
+
+# local secrets
+.env
+.env.*
+
+# generated firebase config (created at deploy time)
+firebase-config.js
+
