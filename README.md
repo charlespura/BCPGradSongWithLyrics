@@ -1,4 +1,8 @@
+
+
 # GradSongWithLyrics
+<img width="800" height="500" alt="Screenshot 2026-04-22 at 11 15 55 PM" src="https://github.com/user-attachments/assets/1c108a47-1679-49b7-be4b-fa4385342c39" />
+<img width="800" height="500" alt="Screenshot 2026-04-22 at 11 16 28 PM" src="https://github.com/user-attachments/assets/26e1bdcb-f035-4515-8a01-88077cc7f160" />
 
 ## Firebase Stars (Firestore)
 
