@@ -51,14 +51,41 @@ const requiredKeys = [
   'FIREBASE_APP_ID',
 ];
 
+function writeConfigFile(filePath, firebaseConfig) {
+  const ext = path.extname(filePath).toLowerCase();
+  if (ext === '.js') {
+    const js = `// Auto-generated. Do not commit.\nwindow.__FIREBASE_CONFIG__ = ${JSON.stringify(
+      firebaseConfig,
+      null,
+      2,
+    )};\n`;
+    fs.writeFileSync(filePath, js, 'utf8');
+  } else {
+    fs.writeFileSync(
+      filePath,
+      JSON.stringify(firebaseConfig, null, 2) + '\n',
+      'utf8',
+    );
+  }
+}
+
+const resolvedOutPath = path.resolve(process.cwd(), outPath);
 const missing = requiredKeys.filter((key) => !env[key]);
 if (missing.length) {
-  console.error(
+  console.warn(
     `Missing env vars: ${missing.join(
       ', ',
-    )}\nCreate .env (or GitHub Secrets) and re-run.`,
+    )}\nWriting placeholder config to keep the site working (stars will be disabled).`,
   );
-  process.exitCode = 1;
+  writeConfigFile(resolvedOutPath, {
+    apiKey: '',
+    authDomain: '',
+    projectId: '',
+    storageBucket: '',
+    messagingSenderId: '',
+    appId: '',
+  });
+  console.log(`Wrote ${outPath}`);
 } else {
   const firebaseConfig = {
     apiKey: env.FIREBASE_API_KEY,
@@ -73,23 +100,6 @@ if (missing.length) {
     firebaseConfig.measurementId = env.FIREBASE_MEASUREMENT_ID;
   }
 
-  const resolvedOutPath = path.resolve(process.cwd(), outPath);
-  const ext = path.extname(resolvedOutPath).toLowerCase();
-
-  if (ext === '.js') {
-    const js = `// Auto-generated. Do not commit.\nwindow.__FIREBASE_CONFIG__ = ${JSON.stringify(
-      firebaseConfig,
-      null,
-      2,
-    )};\n`;
-    fs.writeFileSync(resolvedOutPath, js, 'utf8');
-  } else {
-    fs.writeFileSync(
-      resolvedOutPath,
-      JSON.stringify(firebaseConfig, null, 2) + '\n',
-      'utf8',
-    );
-  }
-
+  writeConfigFile(resolvedOutPath, firebaseConfig);
   console.log(`Wrote ${outPath}`);
 }

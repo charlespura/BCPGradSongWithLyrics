@@ -7,4 +7,3 @@ node_modules/
 
 # generated firebase config (created at deploy time)
 firebase-config.js
-firebase-config.json
