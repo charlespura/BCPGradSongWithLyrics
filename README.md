@@ -15,6 +15,8 @@ This project uses Firestore for a per-song star counter.
 
 `node scripts/generate-firebase-config.mjs`
 
+Note: `firebase-config.json` is intentionally not committed (it contains your Firebase web config).
+
 ### GitHub Pages setup (Secrets)
 
 Add these GitHub repo secrets (Settings → Secrets and variables → Actions):
