@@ -44,6 +44,7 @@ jobs:
           mkdir -p site
           cp -R index.html assets lyrics video README.md site/
           node scripts/generate-firebase-config.mjs --out site/firebase-config.json
+          test -s site/firebase-config.json
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
