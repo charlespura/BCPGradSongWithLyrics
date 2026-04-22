@@ -156,6 +156,7 @@
       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
       gap: 1.5rem;
       margin: 2rem 0;
+      align-items: start;
     }
 
     @media (min-width: 768px) {
@@ -469,15 +470,14 @@
 Lyrics file not found yet.
 
 Add it here: lyrics/you-are-mine.txt
-(Only include lyrics you have rights/permission to display.)</pre
-            >
+(Only include lyrics you have rights/permission to display.)</pre>
           </details>
         </article>
 
         <article class="card" id="saranggola">
           <header class="card-header">
             <h2>Saranggola</h2>
-            <p class="meta">Ben&Ben</p>
+            <p class="meta">Ben&amp;Ben</p>
           </header>
 
           <div class="media-grid">
@@ -485,7 +485,7 @@ Add it here: lyrics/you-are-mine.txt
               <h3 class="media-title">Performance</h3>
               <div class="video">
               
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/eTQS39ufnCM?si=gqBj__lGq3maTOYt" title="Sarangola by Ben&Ben" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/eTQS39ufnCM?si=gqBj__lGq3maTOYt" title="Sarangola by Ben&amp;Ben" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
               </div>
             </div>
             <div class="media">
@@ -511,8 +511,7 @@ Add it here: lyrics/you-are-mine.txt
 Lyrics file not found yet.
 
 Add it here: lyrics/saranggola.txt
-(Only include lyrics you have rights/permission to display.)</pre
-            >
+(Only include lyrics you have rights/permission to display.)</pre>
           </details>
         </article>
 
@@ -546,8 +545,7 @@ Add it here: lyrics/saranggola.txt
 Lyrics file not found yet.
 
 Add it here: lyrics/kaibigan-ko-paaralan-ko.txt
-(Only include lyrics you have rights/permission to display.)</pre
-            >
+(Only include lyrics you have rights/permission to display.)</pre>
           </details>
         </article>
 
@@ -582,8 +580,7 @@ Add it here: lyrics/kaibigan-ko-paaralan-ko.txt
 Lyrics file not found yet.
 
 Add it here: lyrics/bcp-hymn.txt
-(Only include lyrics you have rights/permission to display.)</pre
-            >
+(Only include lyrics you have rights/permission to display.)</pre>
           </details>
         </article>
 
@@ -628,8 +625,7 @@ Add it here: lyrics/bcp-hymn.txt
 Lyrics file not found yet.
 
 Add it here: lyrics/liwanag-sa-dilim.txt
-(Only include lyrics you have rights/permission to display.)</pre
-            >
+(Only include lyrics you have rights/permission to display.)</pre>
           </details>
         </article>
      
@@ -699,7 +695,19 @@ Add it here: lyrics/liwanag-sa-dilim.txt
     initializeTheme();
 
     // Lyrics loading from files
-    document.querySelectorAll('.lyrics').forEach((details) => {
+    const lyricDetails = Array.from(document.querySelectorAll('.lyrics'));
+
+    // Accordion behavior: only one lyrics panel open at a time
+    lyricDetails.forEach((details) => {
+      details.addEventListener('toggle', () => {
+        if (!details.open) return;
+        lyricDetails.forEach((other) => {
+          if (other !== details) other.open = false;
+        });
+      });
+    });
+
+    lyricDetails.forEach((details) => {
       const lyricsTarget = details.querySelector('[data-lyrics-target]');
       const lyricsFile = details.getAttribute('data-lyrics-src');
 
