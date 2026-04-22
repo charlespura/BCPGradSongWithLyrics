@@ -43,7 +43,6 @@ jobs:
         run: |
           mkdir -p site
           cp -R index.html assets lyrics video README.md site/
-          cp firebase-config.json site/firebase-config.json
           node scripts/generate-firebase-config.mjs --out site/firebase-config.json
 
       - name: Upload artifact

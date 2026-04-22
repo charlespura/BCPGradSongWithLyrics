@@ -1,10 +1,9 @@
 {
-  "apiKey": "",
-  "authDomain": "",
-  "projectId": "",
-  "storageBucket": "",
-  "messagingSenderId": "",
-  "appId": "",
-  "measurementId": ""
+  "apiKey": "AIzaSyApo7T486mxPBuFFAOTKa13ktiDoz_Ww-4",
+  "authDomain": "act1maamrich.firebaseapp.com",
+  "projectId": "act1maamrich",
+  "storageBucket": "act1maamrich.firebasestorage.app",
+  "messagingSenderId": "722768316793",
+  "appId": "1:722768316793:web:bcef9477e003349c7807a8",
+  "measurementId": "G-JRPXB6C4ZF"
 }
-

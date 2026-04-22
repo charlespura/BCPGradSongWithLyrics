@@ -214,6 +214,7 @@
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
+      z-index: 2;
     }
 
     .star-button {
@@ -828,9 +829,13 @@ Add it here: lyrics/liwanag-sa-dilim.txt
     async function loadFirebaseConfig() {
       try {
         const res = await fetch('./firebase-config.json', { cache: 'no-store' });
-        if (!res.ok) return null;
+        if (!res.ok) {
+          console.warn('firebase-config.json not found:', res.status);
+          return null;
+        }
         return await res.json();
-      } catch {
+      } catch (err) {
+        console.warn('Failed to load firebase-config.json', err);
         return null;
       }
     }
