@@ -11,7 +11,7 @@ This project uses Firestore for a per-song star counter.
 ### Local setup
 
 1. Fill in `.env` (or copy `.env.example` → `.env`)
-2. Generate `firebase-config.js`:
+2. Generate `firebase-config.json`:
 
 `node scripts/generate-firebase-config.mjs`
 

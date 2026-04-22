@@ -39,7 +39,7 @@ function getArg(name) {
   return process.argv[idx + 1] ?? null;
 }
 
-const outPath = getArg('--out') ?? 'firebase-config.js';
+const outPath = getArg('--out') ?? 'firebase-config.json';
 const env = loadEnv();
 
 const requiredKeys = [
@@ -73,13 +73,23 @@ if (missing.length) {
     firebaseConfig.measurementId = env.FIREBASE_MEASUREMENT_ID;
   }
 
-  const js = `// Auto-generated. Do not commit.\nwindow.__FIREBASE_CONFIG__ = ${JSON.stringify(
-    firebaseConfig,
-    null,
-    2,
-  )};\n`;
+  const resolvedOutPath = path.resolve(process.cwd(), outPath);
+  const ext = path.extname(resolvedOutPath).toLowerCase();
 
-  fs.writeFileSync(path.resolve(process.cwd(), outPath), js, 'utf8');
+  if (ext === '.js') {
+    const js = `// Auto-generated. Do not commit.\nwindow.__FIREBASE_CONFIG__ = ${JSON.stringify(
+      firebaseConfig,
+      null,
+      2,
+    )};\n`;
+    fs.writeFileSync(resolvedOutPath, js, 'utf8');
+  } else {
+    fs.writeFileSync(
+      resolvedOutPath,
+      JSON.stringify(firebaseConfig, null, 2) + '\n',
+      'utf8',
+    );
+  }
+
   console.log(`Wrote ${outPath}`);
 }
-

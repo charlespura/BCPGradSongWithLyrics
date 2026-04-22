@@ -714,7 +714,6 @@ Add it here: lyrics/liwanag-sa-dilim.txt
   </main>
 
   
-  <script src="firebase-config.js"></script>
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
     import {
@@ -806,7 +805,6 @@ Add it here: lyrics/liwanag-sa-dilim.txt
     });
 
     // Star counter (Firestore)
-    const firebaseConfig = window.__FIREBASE_CONFIG__;
     const starButtons = Array.from(document.querySelectorAll('[data-star-button]'));
 
     function getOrCreateAnonId() {
@@ -827,8 +825,20 @@ Add it here: lyrics/liwanag-sa-dilim.txt
       });
     }
 
+    async function loadFirebaseConfig() {
+      try {
+        const res = await fetch('./firebase-config.json', { cache: 'no-store' });
+        if (!res.ok) return null;
+        return await res.json();
+      } catch {
+        return null;
+      }
+    }
+
+    const firebaseConfig = (await loadFirebaseConfig()) || window.__FIREBASE_CONFIG__ || null;
+
     if (!firebaseConfig || !firebaseConfig.projectId) {
-      disableStars('Stars disabled (missing firebase-config.js)');
+      disableStars('Stars disabled (missing firebase-config.json)');
     } else {
       const app = initializeApp(firebaseConfig);
       const db = getFirestore(app);
