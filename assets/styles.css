@@ -1,0 +1,213 @@
+:root {
+  --bg: #0b1020;
+  --card: rgba(255, 255, 255, 0.06);
+  --card-2: rgba(255, 255, 255, 0.04);
+  --text: #eaf0ff;
+  --muted: rgba(234, 240, 255, 0.72);
+  --line: rgba(234, 240, 255, 0.16);
+  --accent: #f7c948;
+  --accent-2: #7aa2ff;
+  --shadow: 0 18px 60px rgba(0, 0, 0, 0.45);
+  --radius: 16px;
+  --radius-sm: 12px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji",
+    "Segoe UI Emoji";
+  color: var(--text);
+  background: radial-gradient(1200px 800px at 20% -10%, rgba(122, 162, 255, 0.25), transparent 50%),
+    radial-gradient(1000px 700px at 120% 10%, rgba(247, 201, 72, 0.18), transparent 52%),
+    radial-gradient(900px 700px at 40% 110%, rgba(247, 201, 72, 0.1), transparent 55%), var(--bg);
+}
+
+.container {
+  width: min(1100px, calc(100% - 32px));
+  margin: 0 auto;
+}
+
+.site-header {
+  padding: 28px 0 18px;
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(10px);
+  background: linear-gradient(to bottom, rgba(11, 16, 32, 0.92), rgba(11, 16, 32, 0.62));
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.brand-mark {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(247, 201, 72, 0.95), rgba(122, 162, 255, 0.9));
+  color: rgba(11, 16, 32, 0.95);
+  font-weight: 900;
+  letter-spacing: 0.6px;
+  box-shadow: var(--shadow);
+}
+
+.brand-text h1 {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.2;
+}
+
+.subtitle {
+  margin: 2px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.note {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.note code {
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+main.container {
+  padding: 22px 0 42px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, var(--card), var(--card-2));
+  box-shadow: var(--shadow);
+  overflow: clip;
+}
+
+.card-header {
+  padding: 16px 16px 0;
+}
+
+.card-header h2 {
+  margin: 0;
+  font-size: 18px;
+  letter-spacing: 0.2px;
+}
+
+.meta {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.media-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  padding: 14px 16px 0;
+}
+
+.media-title {
+  margin: 0 0 8px;
+  font-size: 13px;
+  color: rgba(234, 240, 255, 0.88);
+  letter-spacing: 0.3px;
+  font-weight: 650;
+}
+
+.video {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid rgba(234, 240, 255, 0.14);
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.video iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.lyrics {
+  margin: 14px 16px 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(234, 240, 255, 0.14);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.lyrics > summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 12px 12px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  color: rgba(234, 240, 255, 0.95);
+  user-select: none;
+}
+
+.lyrics > summary::-webkit-details-marker {
+  display: none;
+}
+
+.lyrics > summary::after {
+  content: "▼";
+  float: right;
+  opacity: 0.75;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.lyrics[open] > summary::after {
+  content: "▲";
+}
+
+.lyrics-text {
+  margin: 0;
+  padding: 12px 12px 14px;
+  color: rgba(234, 240, 255, 0.82);
+  white-space: pre-wrap;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 13px;
+  line-height: 1.55;
+  border-top: 1px solid rgba(234, 240, 255, 0.12);
+}
+
+.site-footer {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(234, 240, 255, 0.14);
+  color: var(--muted);
+  font-size: 13px;
+}
+
+@media (min-width: 900px) {
+  .media-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
